@@ -18,7 +18,7 @@ def load_data(file):
     return labels, sentences
 
 
-def load_label_set(file='data/ontology/types.txt'):
+def load_label_set(file='data/types.txt'):
     labels = set()
     with open(file) as f:
         for line in f.readlines():
