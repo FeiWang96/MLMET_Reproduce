@@ -9,3 +9,4 @@ pronouns = {'i', 'me', 'myself', 'we', 'us', 'ourselves', 'he', 'him', 'himself'
             'it', 'they', 'them', 'themselves', 'you'}
 nn_tags = {'NN', 'NNP', 'NNS', 'NNPS'}
 
+def 
