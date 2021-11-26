@@ -26,7 +26,7 @@ def load_label_set(file='data/types.txt'):
     return labels
 
 
-def load_label_dict(file='data/ontology/types.txt'):
+def load_label_dict(file='data/types.txt'):
     label_dict = {}
     with open(file) as f:
         for i, line in enumerate(f.readlines()):
