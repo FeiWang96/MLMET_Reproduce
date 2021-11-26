@@ -1,0 +1,2 @@
+actor star	In late 2015, Leonardo DiCaprio starred in The Revenant. [SEP] Leonardo DiCaprio
+actor star person	In 2015, Leonardo DiCaprio starred in The Revenant. [SEP] Leonardo DiCaprio
