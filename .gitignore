@@ -5,5 +5,5 @@ data/ontology
 data/ontonotes
 data/*.zip
 data/*.tar.gz
-data/processed/el_train.txt
-data/processed/headword_train.txt
+data/processed
+data/processed
