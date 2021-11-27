@@ -17,7 +17,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 DEVICE = 'cuda:0'
 
 
-def run(model_name="bert-base-uncased", output_file='generated_labels.txt', batch_size=64, max_seq_length=128, k=20):
+def run(model_name="bert-base-cased", output_file='generated_labels.txt', batch_size=64, max_seq_length=128, k=20):
     labels, sentences = load_data('data/prompts.txt')
     label_set = load_label_set()
 

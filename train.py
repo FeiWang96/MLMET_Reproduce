@@ -11,11 +11,11 @@ from sklearn.metrics import f1_score
 import torch
 from torch.utils.data import Dataset
 from transformers import AutoConfig, AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
-from transformers.models.bert.modeling_bert import BertForSequenceClassification
 
-from utils import load_label_dict, load_data
+from model import BertForUFET
+from utils import load_label_dict, load_data, macro_f1
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 
 
 class UFDataset(Dataset):
@@ -49,38 +49,43 @@ class UFDataset(Dataset):
         return sample
 
 
-def run(model_name="bert-base-uncased"):
+def run(model_name="bert-base-cased"):
     label_dict = load_label_dict()
     tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
-    labels, sentences = load_data('data/train.txt')
-    train_dataset = UFDataset(labels, sentences, label_dict, tokenizer)
-    val_dataset = UFDataset(labels, sentences, label_dict, tokenizer)
-    test_dataset = UFDataset(labels, sentences, label_dict, tokenizer)
+    train_labels, train_sentences = load_data('data/train.txt')
+    train_dataset = UFDataset(train_labels, train_sentences, label_dict, tokenizer)
+    dev_labels, dev_sentences = load_data('data/dev.txt')
+    val_dataset = UFDataset(dev_labels, dev_sentences, label_dict, tokenizer)
+    test_labels, test_sentences = load_data('data/test.txt')
+    test_dataset = UFDataset(test_labels, test_sentences, label_dict, tokenizer)
 
     config = AutoConfig.from_pretrained(model_name, num_labels=len(label_dict),
                                         problem_type='multi_label_classification')
-    model = AutoModelForSequenceClassification.from_pretrained(model_name, config=config)
+    model = BertForUFET.from_pretrained(model_name, config=config)
 
     training_args = TrainingArguments(
-        output_dir='./results',  # output directory
-        num_train_epochs=3,  # total number of training epochs
-        per_device_train_batch_size=16,  # batch size per device during training
-        per_device_eval_batch_size=64,  # batch size for evaluation
-        warmup_steps=500,  # number of warmup steps for learning rate scheduler
-        weight_decay=0.01,  # strength of weight decay
+        per_device_train_batch_size=48,  # batch size per device during training
+        per_device_eval_batch_size=256,  # batch size for evaluation
+        learning_rate=2e-5,
+        warmup_steps=0,  # number of warmup steps for learning rate scheduler
+        # weight_decay=0.01,
+        max_steps=42000,
+        logging_steps=100,
+        evaluation_strategy='steps',
         logging_dir='./logs',  # directory for storing logs
-        logging_steps=10,
+        output_dir='./results',  # output directory
     )
 
     def compute_metrics(p):
-        pred_labels = (p.predictions > 0).astype(int)  # TODO: threshold
-        gold_labels = p.label_ids.astype(int)
-        n_labels = pred_labels.shape[1]
-        macro_f1 = 0
-        for i in range(n_labels):
-            macro_f1 += f1_score(gold_labels[:, i], pred_labels[:, i])
-        macro_f1 /= n_labels
-        return {'macro_f1': macro_f1}
+        gold_and_pred = []
+        for logits, gold in zip(p.predictions, p.label_ids.astype(int)):
+            pred = np.squeeze(np.argwhere(logits > 0), axis=1)  # TODO: threshold
+            if len(pred) == 0:
+                pred = [np.argmax(logits)]
+            gold = np.squeeze(np.argwhere(gold > 0.5), axis=1)
+            gold_and_pred.append((gold, pred))
+        p, r, f1 = macro_f1(gold_and_pred)
+        return {'f1': f1, 'precision': p, 'recall': r}
 
     trainer = Trainer(
         model=model,  # the instantiated Transformers model to be trained
