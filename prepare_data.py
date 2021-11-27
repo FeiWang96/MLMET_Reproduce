@@ -125,7 +125,7 @@ if __name__ == '__main__':
     
     #debug
     #prepare_data('./data/crowd/dev.json', './data/processed/dev.txt')
-    prepare_masked_data('./data/crowd/dev.json', './data/processed/dev.txt')
+    #prepare_masked_data('./data/crowd/dev.json', './data/processed/dev.txt')
     
     end = time.time()
     print('Loading finished:\t', end - start)

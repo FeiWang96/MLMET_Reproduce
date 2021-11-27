@@ -6,4 +6,3 @@ data/ontonotes
 data/*.zip
 data/*.tar.gz
 data/processed
-data/processed
