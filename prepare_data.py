@@ -1,9 +1,7 @@
-import os
 import json
-import gzip
-import re
 import xml.etree.ElementTree as ET
 import time
+import argparse
 
 #macros
 pronouns = {'i', 'me', 'myself', 'we', 'us', 'ourselves', 'he', 'him', 'himself', 'she', 'her', 'herself',
@@ -48,11 +46,17 @@ def prepare_data(file_input = './data/crowd/train.json', file_output = './data/p
     f_out.close()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Arguments for preparing data.')
+    parser.add_argument('-i', type=str, help='input file')
+    parser.add_argument('-o', type=str, help='output file')
+    args = parser.parse_args()
     print('Reformatting data...')
     start = time.time()
-    prepare_data('./data/crowd/train.json', './data/processed/train.txt')
-    prepare_data('./data/crowd/dev.json', './data/processed/dev.txt')
-    prepare_data('./data/crowd/test.json', './data/processed/test.txt')
+    prepare_data(args.i, args.o)
+    #prepare_data('./data/crowd/dev.json', './data/processed/dev.txt')
+    #prepare_data('./data/crowd/test.json', './data/processed/test.txt')
+    #prepare_data('./data/distant_supervision/el_train.json', './data/processed/el_train.txt')
+    #prepare_data('./data/distant_supervision/headword_train.json', './data/processed/headword_train.txt')
     end = time.time()
     print('Loading finished:\t', end - start)
     
