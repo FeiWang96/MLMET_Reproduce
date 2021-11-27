@@ -3,3 +3,6 @@ data/crowd
 data/distant_supervision
 data/ontology
 data/ontonotes
+data/*.zip
+data/*.tar.gz
+data/processed
