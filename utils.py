@@ -32,3 +32,32 @@ def load_label_dict(file='data/types.txt'):
         for i, line in enumerate(f.readlines()):
             label_dict[line.strip()] = i
     return label_dict
+
+
+def macro_f1(true_and_prediction):
+    # https://github.com/HKUST-KnowComp/MLMET/blob/ae1188a929a5ca6a8e087bb091853b328ea2c7e7/utils/utils.py#L16
+    p, r = 0., 0.
+    pred_example_count, gold_example_count = 0., 0.
+    pred_label_count = 0.
+    for true_labels, predicted_labels in true_and_prediction:
+        if len(predicted_labels) > 0:
+            pred_example_count += 1
+            pred_label_count += len(predicted_labels)
+            per_p = len(set(predicted_labels).intersection(set(true_labels))) / float(len(predicted_labels))
+            p += per_p
+        if len(true_labels) > 0:
+            gold_example_count += 1
+            per_r = len(set(predicted_labels).intersection(set(true_labels))) / float(len(true_labels))
+            r += per_r
+    precision, recall = 0, 0
+    if pred_example_count > 0:
+        precision = p / pred_example_count
+    if gold_example_count > 0:
+        recall = r / gold_example_count
+
+    def calc_f1(p, r):
+        if r == 0.:
+            return 0.
+        return 2 * p * r / float(p + r)
+
+    return precision, recall, calc_f1(precision, recall)
