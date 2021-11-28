@@ -1,7 +1,7 @@
 # MLMET_Reproduce
 USC CSCI 662 Project
 
-## Results
+## Claim Verification
 
 ### Table 2: Comparison of Patterns
 
@@ -21,8 +21,32 @@ H especially M | 20.1 | 5.1 | 8.2
 Method | Precision | Recall | F1 
 --- | --- | --- | --- |
 BERT-Ultra-Direct | 52.3 | 31.9 | 39.6
-BERT-Ultra-Pre |  |  |  |
-Ours (Single Pattern, Unweighted Loss, No self-train) |  |  |  |
+BERT-Ultra-Pre | 52.1 | 33.6 | 40.8 
+Ours (Single Pattern) | 52.1 | 36.7 | 43.0 
+
+* None of the above uses Weighted Loss or self-train, so the performance may be slightly worse than the numbers reported in the paper.
+* For weak supervision, we only use 300,000 instances.
 
 
+## Additional Ablations
 
+### Influence of K
+
+K | Precision | Recall | F1 
+--- | --- | --- | --- |
+5 | 28.6 | 23.2 | 25.6
+10 | 21.8 | 33.1 | 26.3
+15 | 17.7 | 39.0 | 24.3 
+20 | 15.0 | 43.0 | 22.3  
+
+
+* We use 'M and any other H'.
+
+### Input Format
+
+Entity Marker | Precision | Recall | F1 
+--- | --- | --- | --- |
+Repeat at End | 52.3 | 31.9 | 39.6
+Surround by Special Token | 52.6 | 31.5 | 39.4  
+
+* We use BERT-Ultra-Direct model.
