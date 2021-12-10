@@ -1,14 +1,11 @@
 import json
-import xml.etree.ElementTree as ET
+
 import time
 import argparse
+from tqdm import tqdm
 
-#macros
-pronouns = {'i', 'me', 'myself', 'we', 'us', 'ourselves', 'he', 'him', 'himself', 'she', 'her', 'herself',
-            'it', 'they', 'them', 'themselves', 'you'}
-nn_tags = {'NN', 'NNP', 'NNS', 'NNPS'}
 
-def prepare_train_data(file_input = './data/crowd/train.json', file_output = './data/processed/train.txt'):
+def prepare_train_data(file_input='./data/crowd/train.json', file_output='./data/processed/train.txt'):
     '''
     @param file_input (str): input filename
     @param file_output (str): output text file, model inputs
@@ -19,7 +16,7 @@ def prepare_train_data(file_input = './data/crowd/train.json', file_output = './
     mention = []
     sentence_right = []
     text_output = []
-    for i, line in enumerate(f_in):
+    for i, line in tqdm(enumerate(f_in)):
         x = json.loads(line)
         sentence = ''
         y_list = x.get('y_str', None)
@@ -45,8 +42,9 @@ def prepare_train_data(file_input = './data/crowd/train.json', file_output = './
     f_in.close()
     f_out.close()
 
-#create 6 different patterns of masked data
-def prepare_masked_data(file_input = './data/crowd/train.json', file_output = './data/processed/train.txt'):
+
+# create 6 different patterns of masked data
+def prepare_masked_data(file_input='./data/crowd/train.json', file_output='./data/processed/train.txt'):
     '''
     @param file_input (str): input filename
     @param file_output (str): output text file, model inputs
@@ -59,24 +57,24 @@ def prepare_masked_data(file_input = './data/crowd/train.json', file_output = '.
     text_output = []
     patterns = [
         'and any other [MASK] ',
-        'and some other [MASK] ',
-        '[MASK] such as ',
-        'such [MASK] as ',
-        '[MASK] including ',
-        '[MASK] especially '
+        # 'and some other [MASK] ',
+        # '[MASK] such as ',
+        # 'such [MASK] as ',
+        # '[MASK] including ',
+        # '[MASK] especially '
     ]
     f_out = []
     iter = len(patterns)
     for i in range(iter):
         f_out.append(open(file_output + '.' + 'pattern_' + str(i), 'w', encoding='utf-8'))
-    
-    for i, line in enumerate(f_in):
+
+    for i, line in tqdm(enumerate(f_in)):
         x = json.loads(line)
         y_list = x.get('y_str', None)
         sentence_left = x.get('left_context_token', None)
         mention = x.get('mention_span', None)
         sentence_right = x.get('right_context_token', None)
-        #write
+        # write
         for p in range(iter):
             sentence = ''
             if y_list is not None:
@@ -95,21 +93,20 @@ def prepare_masked_data(file_input = './data/crowd/train.json', file_output = '.
                 for word in sentence_right:
                     sentence += word + ' '
                 sentence = sentence[:-1]
-                sentence += '\n'    
+                sentence += '\n'
                 f_out[p].writelines(sentence)
-        
+
     for i in range(iter):
-        f_out[i].close
+        f_out[i].close()
     f_in.close()
-
-
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments for preparing data.')
-    parser.add_argument('-i', type=str, help='input file')
-    parser.add_argument('-o', type=str, help='output file')
-    parser.add_argument('-m', type=int, help='generation mode: 0 - for training data; 1 - for masked training data')
+    parser.add_argument('-i', type=str, default='./data/distant.json', help='input file')
+    parser.add_argument('-o', type=str, default='./data/train_distant.txt', help='output file')
+    parser.add_argument('-m', type=int, default=0,
+                        help='generation mode: 0 - for training data; 1 - for masked training data')
     args = parser.parse_args()
     print('Reformatting data...')
     start = time.time()
@@ -118,15 +115,14 @@ if __name__ == '__main__':
             prepare_train_data(args.i, args.o)
         elif args.m == 1:
             prepare_masked_data(args.i, args.o)
-        else: 
+        else:
             print('Arg error.')
-    else: 
+    else:
         print('Arg error.')
-    
-    #debug
-    #prepare_data('./data/crowd/dev.json', './data/processed/dev.txt')
-    #prepare_masked_data('./data/crowd/dev.json', './data/processed/dev.txt')
-    
+
+    # debug
+    # prepare_data('./data/crowd/dev.json', './data/processed/dev.txt')
+    # prepare_masked_data('./data/crowd/dev.json', './data/processed/dev.txt')
+
     end = time.time()
     print('Loading finished:\t', end - start)
-    

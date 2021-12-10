@@ -48,3 +48,5 @@ Entity Marker | Precision | Recall | F1
 --- | --- | --- | --- |
 Repeat at End | 52.3 | 31.9 | 39.6
 Surround by Special Token | 52.6 | 31.5 | 39.4  
+
+* We use BERT-Ultra-Direct model.
