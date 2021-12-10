@@ -35,7 +35,7 @@ def load_label_dict(file='data/types.txt'):
 
 
 def macro_f1(true_and_prediction):
-    # https://github.com/HKUST-KnowComp/MLMET/blob/ae1188a929a5ca6a8e087bb091853b328ea2c7e7/utils/utils.py#L16
+    # https://github.com/uwnlp/open_type/blob/master/eval_metric.py
     p, r = 0., 0.
     pred_example_count, gold_example_count = 0., 0.
     pred_label_count = 0.
