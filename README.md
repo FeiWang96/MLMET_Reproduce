@@ -15,12 +15,18 @@ tar -zxvf ultrafine_acl18.tar.gz -C data
 
 ## Preprocess Data
 ```bash
-python prepare_data.py
+python prepare_data.py -m 0
 ```
 
 ## Train & Evaluate Model:
 ```bash
 python train.py 
+```
+
+## Label Generation
+```bash
+python prepare_data.py -m 1
+python generate_label.py
 ```
 
 ## Claim Verification
