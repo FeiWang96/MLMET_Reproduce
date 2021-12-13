@@ -2,6 +2,28 @@
 
 USC CSCI 662 Project
 
+## Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+## Download Data
+```bash
+wget http://nlp.cs.washington.edu/entity_type/data/ultrafine_acl18.tar.gz
+tar -zxvf ultrafine_acl18.tar.gz -C data
+```
+
+## Preprocess Data
+Prepare data:
+```bash
+python prepare_data.py
+```
+
+## Train & Evaluate Model:
+```bash
+python train.py 
+```
+
 ## Claim Verification
 
 ### Table 2: Comparison of Patterns
