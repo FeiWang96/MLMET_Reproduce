@@ -14,7 +14,6 @@ tar -zxvf ultrafine_acl18.tar.gz -C data
 ```
 
 ## Preprocess Data
-Prepare data:
 ```bash
 python prepare_data.py
 ```
