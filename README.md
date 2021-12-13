@@ -18,10 +18,13 @@ tar -zxvf ultrafine_acl18.tar.gz -C data
 python prepare_data.py -m 0
 ```
 
-## Train & Evaluate Model:
+## Train & Evaluate Model
 ```bash
 python train.py 
 ```
+
+## Pretrained Model
+You can find it [here](https://drive.google.com/drive/folders/15t3a0tQTi_cQ_7w6IC4Eh9pHhyLPBljC?usp=sharing) using a USC google account.
 
 ## Label Generation
 ```bash
