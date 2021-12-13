@@ -2,6 +2,10 @@
 
 USC CSCI 662 Project
 
+Reproduction of paper [Ultra-Fine Entity Typing with Weak Supervision from a Masked Language Model](https://arxiv.org/abs/2106.04098)
+
+The official implementation can be found [here](https://github.com/HKUST-KnowComp/MLMET).
+
 ## Install Dependencies
 ```bash
 pip install -r requirements.txt
